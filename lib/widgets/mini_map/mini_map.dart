@@ -53,9 +53,9 @@ class MiniMap extends StatefulWidget {
     this.enemyColor,
     this.npcColor,
     this.allyColor,
-    this.zoom = 1.0,
+    this.zoom = 2, //change
     this.decorationColor,
-  })  : size = size ?? Vector2(200, 200),
+  })  : size = size ?? Vector2(100, 250),
         super(key: key);
 
   @override
@@ -95,7 +95,8 @@ class _MiniMapState extends State<MiniMap> {
             height: widget.size.y,
             decoration: BoxDecoration(
               border: widget.border,
-              color: widget.backgroundColor ?? Colors.grey.withOpacity(0.5),
+              color: widget.backgroundColor ??
+                  Color.fromARGB(255, 253, 253, 253).withOpacity(0.5),
               borderRadius: widget.borderRadius,
             ),
             child: ClipRRect(
@@ -122,19 +123,18 @@ class _MiniMapState extends State<MiniMap> {
   }
 
   void _initInterval() {
-    timer = async.Timer.periodic(const Duration(milliseconds: 20), (timer) {
-      bool needSetState = false;
+    timer = async.Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (widget.game.camera.position != cameraPosition) {
         cameraPosition = widget.game.camera.position.clone();
-        needSetState = true;
-      }
+        playerPosition = cameraPosition; //change
 
+        setState(() {});
+      }
       if (widget.game.player?.position != playerPosition) {
+        //change
         playerPosition = widget.game.player?.position.clone() ?? Vector2.zero();
-        needSetState = true;
-      }
+        cameraPosition = playerPosition; //change
 
-      if (needSetState) {
         setState(() {});
       }
     });
@@ -159,7 +159,8 @@ class _MiniMapState extends State<MiniMap> {
           if (component is GameDecoration) {
             component.renderCollision(
               canvas,
-              widget.decorationColor ?? Colors.black.withOpacity(0.5),
+              widget.decorationColor ??
+                  Color.fromARGB(255, 86, 21, 209).withOpacity(0.5),
             );
           }
           if (component is Player) {
